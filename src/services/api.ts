@@ -2524,6 +2524,95 @@ export const exportSmkiLaporanAuditDocx = async (id: number | string) => {
   return res.data;
 };
 
+// ============================================================
+// SMKI: FORMULIR HAK AKSES FISIK (FR-019)
+// ============================================================
+
+export const getHakAksesFisikList = async (params?: {
+  search?: string;
+  status_pengajuan?: string;
+  sifat_akses?: string;
+  tab?: "aktif" | "terhapus";
+  page?: number;
+  per_page?: number;
+}) => {
+  const res = await api.get("/smki/hak-akses-fisik", { params });
+  return res.data;
+};
+
+export const getHakAksesFisikLookup = async () => {
+  const res = await api.get("/smki/hak-akses-fisik/lookup");
+  return res.data;
+};
+
+export const getHakAksesFisikDetail = async (id: number | string) => {
+  const res = await api.get(`/smki/hak-akses-fisik/${id}`);
+  return res.data;
+};
+
+export const createHakAksesFisik = async (payload: any) => {
+  const res = await api.post("/smki/hak-akses-fisik", payload);
+  return res.data;
+};
+
+export const updateHakAksesFisik = async (id: number | string, payload: any) => {
+  const res = await api.put(`/smki/hak-akses-fisik/${id}`, payload);
+  return res.data;
+};
+
+export const verifikasiHakAksesFisik = async (
+  id: number | string,
+  payload: { status: "Approved" | "Rejected"; catatan?: string }
+) => {
+  const res = await api.put(`/smki/hak-akses-fisik/${id}/verifikasi`, payload);
+  return res.data;
+};
+
+export const deleteHakAksesFisik = async (id: number | string) => {
+  const res = await api.delete(`/smki/hak-akses-fisik/${id}`);
+  return res.data;
+};
+
+export const restoreHakAksesFisik = async (id: number | string) => {
+  const res = await api.put(`/smki/hak-akses-fisik/${id}/restore`);
+  return res.data;
+};
+
+export const updateTemplateHeaderHakAksesFisik = async (payload: any) => {
+  const res = await api.put("/smki/hak-akses-fisik/template-header", payload);
+  return res.data;
+};
+
+export const downloadHakAksesFisikDocx = async (id: number | string, fileName?: string) => {
+  const res = await api.get(`/smki/hak-akses-fisik/${id}/export-docx`, {
+    responseType: "blob",
+  });
+
+  // Jika response berupa JSON error terselubung dalam blob
+  if (res.data?.type === "application/json") {
+    const text = await res.data.text();
+    let message = "Gagal mengunduh dokumen Word resmi.";
+    try {
+      const json = JSON.parse(text);
+      if (json.message) message = json.message;
+    } catch (_) {}
+    throw new Error(message);
+  }
+
+  const blob = new Blob([res.data], {
+    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName || `FR-019_${id}.docx`);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};
+
+
 
 
 

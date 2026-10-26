@@ -26,6 +26,7 @@ import {
   Building2,
   CalendarCheck,
   FileCheck,
+  KeyRound,
 } from "lucide-react";
 import Avatar from "@/components/ui/Avatar";
 import { useSidebarStore } from "@/store/useSidebarStore";
@@ -247,6 +248,12 @@ export default function Sidebar() {
                 key: "smki/formulir-hardening",
                 icon: ShieldAlert,
                 iconColor: "text-amber-600 bg-amber-50 border border-amber-200/60",
+              },
+              {
+                name: "Form Hak Akses Fisik",
+                key: "smki/hak-akses-fisik",
+                icon: KeyRound,
+                iconColor: "text-emerald-600 bg-emerald-50 border border-emerald-200/60",
               },
               {
                 name: "Hak Akses TI",
